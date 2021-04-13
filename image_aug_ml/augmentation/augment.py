@@ -1,6 +1,7 @@
 from typing import Callable, Dict, List
 import importlib
 import pathlib
+import tqdm
 
 import cv2
 
@@ -22,16 +23,16 @@ def augment_images(augmentation_conf: Dict, image_dir: pathlib.Path):
 
     # import all image augmentation operations
     augment_ops: List[Callable] = []
-    for augment_path in augmentation_conf.augmentations:
-        augment_module, augment_name = augment_path.rsplit(".")
+    for augment_path in augmentation_conf["augmentations"]:
+        augment_module, augment_name = augment_path.rsplit(".", maxsplit=1)
         augment_ops.append(
             getattr(importlib.import_module(augment_module), augment_name)
         )
 
     # iterate over training images
-    for train_img_path in train_img_paths:
+    for train_img_path in tqdm.tqdm(train_img_paths):
         # load image from file
-        train_img = cv2.imread(train_img_path)
+        train_img = cv2.imread(str(train_img_path))
 
         # perform each augmentation on image
         for augment_op in augment_ops:

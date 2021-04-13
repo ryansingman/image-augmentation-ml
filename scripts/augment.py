@@ -1,4 +1,6 @@
 """Augments all training images using specified aumentations."""
+import pathlib
+
 import yaml
 
 from image_aug_ml.augmentation import augment_images
@@ -18,7 +20,7 @@ if __name__ == "__main__":
 
     # load augmentation dict from file
     with open(args.augmentation_conf, "r") as augmentation_conf_file:
-        augmentation_dict = yaml.load(augmentation_conf_file)
+        augmentation_dict = yaml.load(augmentation_conf_file, Loader=yaml.SafeLoader)
 
     # augment images and save copies to filesystem
-    augment_images(augmentation_dict, args.image_dir)
+    augment_images(augmentation_dict, pathlib.Path(args.image_dir))

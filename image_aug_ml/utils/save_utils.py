@@ -24,7 +24,7 @@ def save_to_file(
     )
 
     # make directory if doesn't already exist
-    aug_img_path.parent.mkdir(exist_ok=True)
+    aug_img_path.parent.mkdir(parents=True, exist_ok=True)
 
     # save image to path
-    cv2.imwrite(aug_img_path, augment_img)
+    cv2.imwrite(str(aug_img_path), augment_img)
