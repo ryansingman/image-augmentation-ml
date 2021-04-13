@@ -20,6 +20,24 @@ def get_all_train_images(
     return [*image_dir.glob("*/train/**/*.JPEG")]
 
 
+def get_all_original_train_images(
+    image_dir: pathlib.Path = pathlib.Path("./images/"),
+) -> List[pathlib.Path]:
+    """Gets all original training images from image directory.
+
+    Parameters
+    ----------
+    image_dir : pathlib.Path, optional
+        directory to get images from, by default pathlib.Path("./images/")
+
+    Returns
+    -------
+    List[pathlib.Path]
+        list of all training image paths
+    """
+    return [*image_dir.glob("original/train/**/*.JPEG")]
+
+
 def get_all_test_images(
     image_dir: pathlib.Path = pathlib.Path("./images/"),
 ) -> List[pathlib.Path]:

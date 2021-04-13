@@ -1,0 +1,12 @@
+augmentations:
+  - image_aug_ml.augmentation.affine.crop
+  - image_aug_ml.augmentation.affine.rotate
+  - image_aug_ml.augmentation.affine.translate
+  - image_aug_ml.augmentation.affine.flip_vertical
+  - image_aug_ml.augmentation.affine.flip_horizontal
+  - image_aug_ml.augmentation.intensity.invert
+  - image_aug_ml.augmentation.intensity.hist_eq
+  - image_aug_ml.augmentation.intensity.amf
+  - image_aug_ml.augmentation.frequency.lowpass
+  - image_aug_ml.augmentation.frequency.bandpass
+  - image_aug_ml.augmentation.frequency.highpass

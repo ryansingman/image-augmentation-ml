@@ -1,0 +1,4 @@
+augmentations:
+  - image_aug_ml.augmentation.frequency.lowpass
+  - image_aug_ml.augmentation.frequency.bandpass
+  - image_aug_ml.augmentation.frequency.highpass

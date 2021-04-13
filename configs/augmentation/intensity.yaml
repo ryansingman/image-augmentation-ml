@@ -1,0 +1,4 @@
+augmentations:
+  - image_aug_ml.augmentation.intensity.invert
+  - image_aug_ml.augmentation.intensity.hist_eq
+  - image_aug_ml.augmentation.intensity.amf
