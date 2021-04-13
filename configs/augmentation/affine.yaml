@@ -1,5 +1,5 @@
 augmentations:
-  - image_aug_ml.augmentation.affine.crop
+  - image_aug_ml.augmentation.affine.resize
   - image_aug_ml.augmentation.affine.rotate
   - image_aug_ml.augmentation.affine.translate
   - image_aug_ml.augmentation.affine.flip_vertical
