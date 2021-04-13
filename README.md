@@ -27,3 +27,15 @@ You can run the test suite with the following command:
 ```
 tox
 ```
+
+## Imageset Download
+You can download the imageset using the following command.
+```
+make img_download
+```
+
+To specify the image size (either 160px or 320px), add on the `PX` flag. By default, this command will download the 160px dataset.
+
+```
+make img_download PX=320
+```
