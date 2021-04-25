@@ -1,0 +1,2 @@
+Can't get the training dataset to push to github so right now I will have it in the local machine.
+Push it to google drive might be a good idea but we can discuss about it in later meeting
