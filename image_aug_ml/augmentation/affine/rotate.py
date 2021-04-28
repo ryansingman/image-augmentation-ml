@@ -22,10 +22,12 @@ def rotate(orig_img: np.ndarray, max_theta: float = 360) -> np.ndarray:
     theta = np.random.uniform(0, max_theta) * np.pi / 180.0
 
     # build rotation matrix
+    c_x, c_y = map(lambda x: x / 2, orig_img.shape[:2])
+    cos_theta, sin_theta = np.cos(theta), np.sin(theta)
     rotate_mat = np.array(
         [
-            [np.cos(theta), -np.sin(theta), 0],
-            [np.sin(theta), np.cos(theta), 0],
+            [cos_theta, sin_theta, (1 - cos_theta) * c_x - (sin_theta * c_y)],
+            [-sin_theta, cos_theta, (sin_theta * c_x) + (1 - cos_theta) * c_y],
             [0, 0, 1],
         ]
     )
