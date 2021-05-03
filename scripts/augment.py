@@ -15,6 +15,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--image_dir", help="path to image directory", default="./images/"
     )
+    parser.add_argument(
+        "--subsample_pct", help="percentage of training images to subsample", type=float
+    )
 
     args = parser.parse_args()
 
@@ -23,4 +26,4 @@ if __name__ == "__main__":
         augmentation_dict = yaml.load(augmentation_conf_file, Loader=yaml.SafeLoader)
 
     # augment images and save copies to filesystem
-    augment_images(augmentation_dict, pathlib.Path(args.image_dir))
+    augment_images(augmentation_dict, pathlib.Path(args.image_dir), args.subsample_pct)
