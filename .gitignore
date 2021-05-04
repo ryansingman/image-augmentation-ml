@@ -1,3 +1,12 @@
+# results dir
+results/
+
+# vscode dir
+.vscode/
+
+# checkpoints dir
+checkpoints/
+
 # images dir
 images/
 
