@@ -1,6 +1,7 @@
 from typing import Dict, List, Tuple
 import pathlib
 
+import numpy as np
 from tensorflow import keras
 import tensorflow as tf
 
@@ -10,7 +11,12 @@ class ImageClassifier:
     preprocesses them, trains, and evaluates."""
 
     def __init__(
-        self, img_dir: pathlib.Path, augmentation_conf: Dict, classifier_conf: Dict
+        self,
+        img_dir: pathlib.Path,
+        augmentation_conf: Dict,
+        classifier_conf: Dict,
+        model_name: str,
+        resume_epoch: int = 0,
     ):
         """Creates image classifier model, creates dataset.
 
@@ -22,10 +28,16 @@ class ImageClassifier:
             augmentation config, contains information about which image augmentations to use
         classifier_conf : Dict
             classifier config, contains info on input shape, hidden layer sizes, etc.
+        model_name : str
+            name of model, used for saving, loading checkpoints
+        resume_epoch : int
+            epoch to resume training from, by default 0 (no resume)
         """
         # save classifier config
         self.classifier_init_conf = classifier_conf["initialization"]
         self.classifier_train_conf = classifier_conf["train"]
+        self.model_name = model_name
+        self.resume_epoch = resume_epoch
 
         # create image dataset
         self.train_dataset, self.validation_dataset = self.make_dataset(
@@ -35,22 +47,12 @@ class ImageClassifier:
         )
 
         # create image classifier model
-        self.model = self.make_model(**self.classifier_init_conf)
-
-    def train(self, model_name: str):
-        """Trains classifier for given number of epochs.
-
-        Parameters
-        ----------
-        model_name : str
-            name of model, used to save checkpoint
-        """
-        # set up save callback
-        callbacks = [
-            keras.callbacks.ModelCheckpoint(
-                f"checkpoints/{model_name}_{self.classifier_train_conf['epochs']}.h5"
+        if resume_epoch != 0:
+            self.model = keras.models.load_model(
+                f"checkpoints/{self.model_name}/{resume_epoch:02d}.cpkt", compile=False
             )
-        ]
+        else:
+            self.model = self.make_model(**self.classifier_init_conf)
 
         # compile model with binary cross entropy loss and Adam optimizer
         self.model.compile(
@@ -61,12 +63,31 @@ class ImageClassifier:
             metrics=["accuracy"],
         )
 
+    def train(self):
+        """Trains classifier for given number of epochs."""
+        # set up save callback
+        callbacks = [
+            keras.callbacks.ModelCheckpoint(
+                filepath=f"checkpoints/{self.model_name}/{{epoch:02d}}.cpkt",
+                verbose=True,
+            )
+        ]
+
+        # set up dataset repeating (if needed)
+        num_imgs = tf.data.experimental.cardinality(self.train_dataset).numpy()
+        num_steps_per_epoch = int(self.classifier_train_conf["step_ratio"] * num_imgs)
+        num_epochs = self.classifier_train_conf["epochs"]
+        num_repeats = int(np.ceil((num_steps_per_epoch * num_epochs) / num_imgs))
+
         # train model
         self.model.fit(
-            self.train_dataset,
-            epochs=self.classifier_train_conf["epochs"],
+            self.train_dataset.repeat(num_repeats),
+            epochs=num_epochs,
+            initial_epoch=self.resume_epoch,
             callbacks=callbacks,
             validation_data=self.validation_dataset,
+            steps_per_epoch=num_steps_per_epoch,
+            verbose=True,
         )
 
     @staticmethod
@@ -118,6 +139,16 @@ class ImageClassifier:
                     label_mode="categorical",
                 )
             )
+
+        # set up shuffling
+        train_ds = train_ds.shuffle(
+            tf.data.experimental.cardinality(train_ds).numpy(),
+            reshuffle_each_iteration=True,
+        )
+        val_ds = val_ds.shuffle(
+            tf.data.experimental.cardinality(val_ds).numpy(),
+            reshuffle_each_iteration=True,
+        )
 
         # set up prefetching
         train_ds = train_ds.prefetch(buffer_size=64)

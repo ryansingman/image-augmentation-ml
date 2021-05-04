@@ -4,12 +4,18 @@ initialization:
   image_shape: [160, 160]
 
   # hidden layer sizes
-  hl_sizes: [128, 256, 512, 728]
+  hl_sizes: [128, 256, 512]
 
   # number of image classes
   num_classes: 10
 
 # train args
 train:
+  # number of epoch to train
   epochs: 15
+
+  # number of steps per epoch (as ratio of total steps in dataset)
+  step_ratio: 0.25
+
+  # learning rate for Adam optimizer
   learning_rate: 0.001

@@ -16,6 +16,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--image_dir", help="path to image directory", default="./images/"
     )
+    parser.add_argument(
+        "--resume_epoch", help="epoch to resume training from", type=int, default=0
+    )
 
     args = parser.parse_args()
 
@@ -28,10 +31,14 @@ if __name__ == "__main__":
         classifier_dict = yaml.load(classifier_conf_file, Loader=yaml.SafeLoader)
 
     # initialize image classifier model and datasets
+    model_name = pathlib.Path(args.augmentation_conf).name.split(".")[0]
     classifier = ImageClassifier(
-        pathlib.Path(args.image_dir), augmentation_dict, classifier_dict
+        pathlib.Path(args.image_dir),
+        augmentation_dict,
+        classifier_dict,
+        model_name,
+        args.resume_epoch,
     )
 
     # train image classifier
-    model_name = pathlib.Path(args.augmentation_conf).name.split(".")[0]
-    classifier.train(model_name)
+    classifier.train()
