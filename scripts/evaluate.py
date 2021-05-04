@@ -1,4 +1,4 @@
-"""Trains image classifier using set of augmented images."""
+"""Evaluates image classifier using validation data."""
 import pathlib
 
 import yaml
@@ -10,15 +10,13 @@ if __name__ == "__main__":
 
     import argparse
 
-    parser = argparse.ArgumentParser(prog="Image classifier training")
+    parser = argparse.ArgumentParser(prog="Image classifier evaluation")
     parser.add_argument("augmentation_conf", help="path to augmentation config")
     parser.add_argument("classifier_conf", help="path to classifier config")
     parser.add_argument(
         "--image_dir", help="path to image directory", default="./images/"
     )
-    parser.add_argument(
-        "--resume_epoch", help="epoch to resume training from", type=int, default=0
-    )
+    parser.add_argument("--load_epoch", help="epoch to evaluate", type=int, default=0)
 
     args = parser.parse_args()
 
@@ -37,8 +35,12 @@ if __name__ == "__main__":
         augmentation_dict,
         classifier_dict,
         model_name,
-        args.resume_epoch,
+        args.load_epoch,
     )
 
-    # train image classifier
-    classifier.train()
+    # evaluate image classifier
+    classifier_results = classifier.evaluate()
+
+    # save results to file
+    with open(f"results/{model_name}_{args.load_epoch}.yaml", "w") as results_file:
+        yaml.dump(classifier_results, results_file)

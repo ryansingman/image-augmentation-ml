@@ -12,10 +12,7 @@ initialization:
 # train args
 train:
   # number of epoch to train
-  epochs: 15
-
-  # number of steps per epoch (as ratio of total steps in dataset)
-  step_ratio: 0.25
+  epochs: 50
 
   # learning rate for Adam optimizer
   learning_rate: 0.001

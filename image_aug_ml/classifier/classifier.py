@@ -1,7 +1,6 @@
 from typing import Dict, List, Tuple
 import pathlib
 
-import numpy as np
 from tensorflow import keras
 import tensorflow as tf
 
@@ -73,22 +72,26 @@ class ImageClassifier:
             )
         ]
 
-        # set up dataset repeating (if needed)
+        # find steps per epoch
         num_imgs = tf.data.experimental.cardinality(self.train_dataset).numpy()
-        num_steps_per_epoch = int(self.classifier_train_conf["step_ratio"] * num_imgs)
         num_epochs = self.classifier_train_conf["epochs"]
-        num_repeats = int(np.ceil((num_steps_per_epoch * num_epochs) / num_imgs))
+        num_steps_per_epoch = int(num_imgs / num_epochs)
 
         # train model
         self.model.fit(
-            self.train_dataset.repeat(num_repeats),
+            self.train_dataset,
             epochs=num_epochs,
             initial_epoch=self.resume_epoch,
             callbacks=callbacks,
             validation_data=self.validation_dataset,
+            validation_freq=15,
             steps_per_epoch=num_steps_per_epoch,
             verbose=True,
         )
+
+    def evaluate(self) -> Dict[str, float]:
+        """Evaluates model on validation data and returns loss and metrics."""
+        return self.model.evaluate(self.validation_dataset, return_dict=True)
 
     @staticmethod
     def make_dataset(
