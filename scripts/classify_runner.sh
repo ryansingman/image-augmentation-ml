@@ -19,4 +19,3 @@ python scripts/classify.py configs/augmentation/intensity.yaml configs/classifie
 printf "\n\n*** Running original Classifier Training***\n\n"
 python scripts/classify.py configs/augmentation/original.yaml configs/classifier/default.yaml --resume_epoch 50
 #python scripts/evaluate.py configs/augmentation/original.yaml configs/classifier/default.yaml --load_epoch 50
-
