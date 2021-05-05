@@ -12,7 +12,7 @@ initialization:
 # train args
 train:
   # number of epoch to train
-  epochs: 50
+  epochs: 100
 
   # learning rate for Adam optimizer
   learning_rate: 0.001

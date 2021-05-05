@@ -38,21 +38,23 @@ if __name__ == "__main__":
     accuracy_fig = px.bar(
         results_df,
         x="Model",
-        facet_col="Epoch",
+        facet_row="Epoch",
         y="accuracy",
         category_orders={"Epoch": [15, 30, 50]},
         title="Accuracy of Image Classifiers by Model, Epoch",
         template="presentation",
+        color="Model",
     )
     accuracy_fig.show()
 
     loss_fig = px.bar(
         results_df,
         x="Model",
-        facet_col="Epoch",
+        facet_row="Epoch",
         y="loss",
         category_orders={"Epoch": [15, 30, 50]},
         title="Loss of Image Classifiers by Model, Epoch",
         template="presentation",
+        color="Model",
     )
     loss_fig.show()
