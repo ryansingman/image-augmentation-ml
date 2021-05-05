@@ -39,3 +39,26 @@ To specify the image size (either 160px or 320px), add on the `PX` flag. By defa
 ```
 make img_download PX=320
 ```
+
+## Image Augmentation
+The set of augmented images can be created by running the augment script. To create the entire set of augmented images, you can run the following command:
+```
+python scripts/augment.py configs/augmentation/all.yaml
+```
+
+## Image Classification
+To train an image classifier, you can run the following command. This command will train an image classifier on the set of all augmented images:
+```
+python scripts/classify.py configs/augmentation/all.yaml configs/classifier/default.yaml
+```
+
+## Classifier Evaluation
+To evaluate the results of a classifier, you can run the following command. This command will evaluate the 30th epoch of the classifier that trained on all augmented images:
+```
+python scripts/evaluate.py configs/augmentation/all.yaml configs/classifier/default.yaml --load_epoch 30
+```
+
+Then, to visualize the results, you can plot them as follows:
+```
+python scripts/plot_results.py
+```
